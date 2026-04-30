@@ -1,0 +1,43 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <h1>Pré-Vestibular do Salgueiro</h1>
+      <h2>Bem Vindo</h2>
+      <p>Faça login para continuar</p>
+    </div>
+
+    <form class="login-form" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="Digite seu e-mail"
+          [(ngModel)]="email"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="senha">Senha</label>
+        <input
+          type="password"
+          id="senha"
+          name="senha"
+          placeholder="Digite sua senha"
+          [(ngModel)]="senha"
+          required
+        />
+      </div>
+
+      <button type="submit" class="btn-primary">Entrar</button>
+    </form>
+
+    <div class="login-links">
+      <a routerLink="/esqueceu-senha" class="link-forgot">Esqueci minha senha</a>
+      <span class="divider">|</span>
+      <a routerLink="/cadastro" class="link-register">Novo cadastro</a>
+    </div>
+  </div>
+</div>
