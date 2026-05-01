@@ -16,8 +16,11 @@
           [(ngModel)]="email"
           required
         />
-        <span class="error-message" *ngIf="erro">{{ erro }}</span>
-        <span class="success-message" *ngIf="sucesso">{{ sucesso }}</span>
+        @if(this.erro != ''){
+          <span class="error-message">{{ this.erro }}</span>
+        }@else {
+          <span class="success-message">{{ this.sucesso }}</span>
+        }
       </div>
 
       <button type="submit" class="btn-primary">Enviar</button>
