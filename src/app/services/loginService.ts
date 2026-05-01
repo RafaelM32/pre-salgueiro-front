@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 
+declare const API_URL: string;
+
 export interface LoginRequest {
   username: string;
   password: string;
@@ -13,7 +15,7 @@ export interface LoginRequest {
 })
 export class LoginService {
   private http = inject(HttpClient);
-  private readonly API_URL = '/api';
+  private API_URL = API_URL+'/api';
 
   login(credentials: LoginRequest): Observable<any> {
     const body = new HttpParams()
