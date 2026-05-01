@@ -2,8 +2,8 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { HttpHeaders, HttpParams } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
-declare const API_URL: string;
 
 export interface LoginRequest {
   username: string;
@@ -15,7 +15,7 @@ export interface LoginRequest {
 })
 export class LoginService {
   private http = inject(HttpClient);
-  private API_URL = API_URL+'/api';
+  private API_URL = environment.API_URL + '/api';
 
   login(credentials: LoginRequest): Observable<any> {
     const body = new HttpParams()
