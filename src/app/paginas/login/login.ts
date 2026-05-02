@@ -17,7 +17,6 @@ export class Login {
   senha = '';
 
   onSubmit() {
-    console.log('Login attempt:', { email: this.email, senha: this.senha });
     const credentials: LoginRequest = {
       username: this.email,
       password: this.senha 

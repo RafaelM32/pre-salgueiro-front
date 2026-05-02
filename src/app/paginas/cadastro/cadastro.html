@@ -1,3 +1,12 @@
+<div #erroMassage class="error-banner">
+    <div class="error-content">        
+        <div class="error-text">
+            <strong class="error-title">ERRO:</strong>
+            <span class="error-message">{{ mensagemErro }}</span>
+        </div>
+    </div>
+</div>
+
 <div class="cadastro-container">
   <div class="cadastro-card">
     <div class="cadastro-header">
@@ -25,6 +34,22 @@
         />
         <span class="photo-hint">Clique na imagem para adicionar uma foto</span>
       </div>
+
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nome">Nome</label>
+          <input
+            type="text"
+            id="nome"
+            name="nome"
+            placeholder="Digite seu nome"
+            [(ngModel)]="nome"
+            required
+          />
+        </div>
+      </div>
+
 
       <div class="form-row">
         <div class="form-group">
@@ -104,26 +129,39 @@
             required
           />
         </div>
+
+        <div class="form-group">
+          <label for="telefone">Telefone</label>
+          <input
+            #telefoneInput
+            type="tel"
+            id="telefone"
+            name="telefone"
+            placeholder="(00) 00000-0000"
+            [(ngModel)]="telefone"
+            (input)="formatTelefone($event)"
+            (keypress)="onKeyPressTelefone($event)"
+            maxlength="15"
+            required
+          />
+        </div>
       </div>
 
+      
+
       <div class="form-group">
-        <label for="faculdade">Qual faculdade pretende fazer?</label>
+        <label for="tipoUsuario">Aluno, Professor ou Administrador?</label>
         <select
-          id="faculdade"
-          name="faculdade"
-          [(ngModel)]="faculdade"
+          id="tipoUsuario"
+          name="tipoUsuario"
+          [(ngModel)]="tipoUsuario"
           required
         >
           <option value="" disabled selected>Selecione uma opção</option>
-          <option value="direito">Direito</option>
-          <option value="administracao">Administração</option>
-          <option value="engenharia-civil">Engenharia Civil</option>
-          <option value="engenharia-producao">Engenharia de Produção</option>
-          <option value="medicina">Medicina</option>
-          <option value="odontologia">Odontologia</option>
-          <option value="psicologia">Psicologia</option>
-          <option value="pedagogia">Pedagogia</option>
-          <option value="outros">Outros</option>
+          @for( tipos of this.tiposUsuario; track tipos.id){
+              <option [value]="tipos.nome">{{ tipos.nome }}</option>
+            }
+
         </select>
       </div>
 

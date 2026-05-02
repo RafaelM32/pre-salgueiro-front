@@ -1,7 +1,10 @@
-import { Component, NgZone, ChangeDetectorRef } from '@angular/core';
+import { Component, NgZone, ChangeDetectorRef, ViewChild, ElementRef, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { CadastroService, TipoUsuario, CadastroRequest } from '../../services/cadastroService';
+import { OnInit } from '@angular/core';
+
 
 @Component({
   selector: 'app-cadastro',
@@ -9,7 +12,7 @@ import { RouterLink } from '@angular/router';
   templateUrl: './cadastro.html',
   styleUrl: './cadastro.css',
 })
-export class Cadastro {
+export class Cadastro  implements OnInit {
   foto: string | ArrayBuffer | null = null;
   email = '';
   confirmarEmail = '';
@@ -17,16 +20,81 @@ export class Cadastro {
   confirmarSenha = '';
   dataNascimento = '';
   cpf = '';
-  faculdade = '';
+  tipoUsuario = '';
+  telefone = '';
+  rawTelefone = '';
+  nome = '';
+  mensagemErro = '';
+
+  @ViewChild('telefoneInput') telefoneInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('erroMassage') erroMassage!: ElementRef<HTMLDivElement>;
 
   // Mensagens de erro
   erroEmail = '';
   erroSenha = '';
 
+
+  tiposUsuario: TipoUsuario[] = [];
+
+  
   constructor(
     private ngZone: NgZone,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private cadastroService: CadastroService
+
   ) {}
+
+
+  ngOnInit() {
+    this.cadastroService.tiposUsuario().subscribe({
+      next: (tipos) => {
+        this.tiposUsuario = tipos;
+        this.cdr.detectChanges(); // Atualiza a view com os tipos de usuário
+      },
+      error: (err) => {
+        console.error('Erro ao carregar tipos de usuário:', err);
+      }
+    });
+  }
+
+
+
+  onKeyPressTelefone(event: KeyboardEvent) {
+    const char = String.fromCharCode(event.which ? event.which : event.keyCode);
+    if (!/[0-9]/.test(char)) {
+      event.preventDefault();
+    }
+  }
+
+  formatTelefone(event: Event) {
+    const input = event.target as HTMLInputElement;
+    let value = input.value.replace(/\D/g, ''); // Only digits
+    this.rawTelefone = value;
+
+    if (value.length > 11) {
+      value = value.substring(0, 11);
+    }
+
+    let formatted = '';
+    if (value.length >= 2) {
+      formatted = `(${value.substring(0, 2)}`;
+    }
+    if (value.length > 2) {
+      formatted += `) ${value.substring(2, 7)}`;
+    }
+    if (value.length > 7) {
+      formatted += `-${value.substring(7, 11)}`;
+    }
+
+    // Set formatted value
+    this.telefone = formatted;
+
+    // Cursor position
+    const cursorPos = Math.min(formatted.length, input.selectionStart || 0) + (formatted.length - value.length);
+    setTimeout(() => {
+      input.setSelectionRange(cursorPos, cursorPos);
+    }, 0);
+  }
 
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -46,7 +114,17 @@ export class Cadastro {
     }
   }
 
+  mostarErro(mensagem: string) {
+    this.mensagemErro = mensagem;
+    this.cdr.detectChanges();
+    this.erroMassage.nativeElement.style.display = 'block';
+    setTimeout(() => {
+      this.erroMassage.nativeElement.style.display = 'none';
+    }, 3000);
+  }
+
   onSubmit() {
+
     // Limpa erros anteriores
     this.erroEmail = '';
     this.erroSenha = '';
@@ -54,25 +132,40 @@ export class Cadastro {
     // Validação de e-mails
     if (this.email !== this.confirmarEmail) {
       this.erroEmail = 'Os e-mails não coincidem';
+      return;
     }
 
     // Validação de senhas
     if (this.senha !== this.confirmarSenha) {
       this.erroSenha = 'As senhas não coincidem';
+      return;
     }
 
     // Se não houver erros, prossegue com o cadastro
-    if (!this.erroEmail && !this.erroSenha) {
-      console.log('Cadastro attempt:', {
-        foto: this.foto,
+      const cadastroRequest: CadastroRequest = {
         email: this.email,
-        confirmarEmail: this.confirmarEmail,
         senha: this.senha,
-        confirmarSenha: this.confirmarSenha,
-        dataNascimento: this.dataNascimento,
+        dataNascimento: new Date(this.dataNascimento),
         cpf: this.cpf,
-        faculdade: this.faculdade
-      });
-    }
+        tipoUsuario: this.tipoUsuario,
+        fotoBase64: typeof this.foto === 'string' ? this.foto : '',
+        telefone: this.rawTelefone,
+        nome: this.nome
+      };
+
+    this.cadastroService.cadastrar(cadastroRequest).subscribe({
+      next: (response) => {
+        console.log('Cadastro successful:', response);
+      },
+      error: (error) => {
+        if(error.status === 409 ){
+          this.mostarErro('CPF ou e-mail já cadastrado. Por favor, verifique seus dados.');
+        }else{
+          this.mostarErro('Falha no cadastro. Por favor, tente novamente.');
+
+        }
+        console.error('Cadastro failed:');
+      }
+    });
   }
 }
