@@ -168,4 +168,21 @@ export class Cadastro  implements OnInit {
       }
     });
   }
+
+  formatarCpf(event: any): void {
+  let valor = event.target.value;
+
+  // Remove tudo que não for número
+  valor = valor.replace(/\D/g, '');
+
+  // Limita a 11 números
+  valor = valor.substring(0, 11);
+
+  // Coloca os pontos e traço
+  valor = valor.replace(/(\d{3})(\d)/, '$1.$2');
+  valor = valor.replace(/(\d{3})(\d)/, '$1.$2');
+  valor = valor.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+
+  this.cpf = valor;
+}
 }

@@ -125,6 +125,7 @@
             name="cpf"
             placeholder="000.000.000-00"
             [(ngModel)]="cpf"
+	    (input)="formatarCpf($event)"
             maxlength="14"
             required
           />
