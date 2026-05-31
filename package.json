@@ -6,7 +6,8 @@
     "start": "ng serve --proxy-config src/proxy.conf.json",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "deploy": "npx ng build --configuration production --base-href  https://rafaelm32.github.io/pre-salgueiro-front/ && npx ngh --dir=dist/pre-salgueiro-front/browser"
   },
   "private": true,
   "packageManager": "npm@11.12.1",
