@@ -146,7 +146,7 @@ export class Cadastro  implements OnInit {
         email: this.email,
         senha: this.senha,
         dataNascimento: new Date(this.dataNascimento),
-        cpf: this.cpf.replace(".","").replace("-",""),
+        cpf: this.cpf.replaceAll(".","").replace("-",""),
         tipoUsuario: this.tipoUsuario,
         fotoBase64: typeof this.foto === 'string' ? this.foto : '',
         telefone: this.rawTelefone,
