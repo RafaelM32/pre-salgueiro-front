@@ -146,12 +146,14 @@ export class Cadastro  implements OnInit {
         email: this.email,
         senha: this.senha,
         dataNascimento: new Date(this.dataNascimento),
-        cpf: this.cpf,
+        cpf: this.cpf.replace(".","").replace("-",""),
         tipoUsuario: this.tipoUsuario,
         fotoBase64: typeof this.foto === 'string' ? this.foto : '',
         telefone: this.rawTelefone,
         nome: this.nome
       };
+
+      console.log(cadastroRequest);
 
     this.cadastroService.cadastrar(cadastroRequest).subscribe({
       next: (response) => {
