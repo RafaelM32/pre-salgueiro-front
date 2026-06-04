@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { Login } from './paginas/login/login';
 import { Cadastro } from './paginas/cadastro/cadastro';
 import { EsqueceuSenha } from './paginas/esqueceu-senha/esqueceu-senha';
-import { FeedPrincipal } from './paginas/esqueceu-senha/feed-principal';
+import { FeedPrincipal } from './paginas/feed-principal/feed-principal';
 
 export const routes: Routes = [
   {
