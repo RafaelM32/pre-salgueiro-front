@@ -16,4 +16,8 @@ export const routes: Routes = [
     path: 'esqueceu-senha',
     component: EsqueceuSenha
   }
+  {
+    path: 'feed-principal',
+    component: FeedPrincipal
+  }
 ];
